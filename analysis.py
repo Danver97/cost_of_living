@@ -38,15 +38,25 @@ def group_by_country(df: pd.DataFrame) -> pd.DataFrame:
     grouped['weighted_avg_net_salary'] = grouped['avg_net_salary'] * grouped['entries']
     grouped['weighted_total_cost_centre'] = grouped['total_cost_centre'] * grouped['entries']
     grouped['weighted_total_cost_outside_centre'] = grouped['total_cost_outside_centre'] * grouped['entries']
+    grouped['weighted_avg_savings_centre'] = grouped['avg_savings_centre'] * grouped['entries']
+    grouped['weighted_avg_savings_outside_centre'] = grouped['avg_savings_outside_centre'] * grouped['entries']
+    grouped['weighted_price_per_squared_meter_centre'] = grouped['price_per_squared_meter_centre'] * grouped['entries']
+    grouped['weighted_price_per_squared_meter_outside_centre'] = grouped['price_per_squared_meter_outside_centre'] * grouped['entries']
     # Sum
     grouped = grouped.groupby('country', as_index=False).sum()
     # Compute averages from weighted summed stats
     grouped['avg_net_salary'] = grouped['weighted_avg_net_salary'] / grouped['entries']
     grouped['total_cost_centre'] = grouped['weighted_total_cost_centre'] / grouped['entries']
     grouped['total_cost_outside_centre'] = grouped['weighted_total_cost_outside_centre'] / grouped['entries']
+    grouped['avg_savings_centre'] = grouped['weighted_avg_savings_centre'] / grouped['entries']
+    grouped['avg_savings_outside_centre'] = grouped['weighted_avg_savings_outside_centre'] / grouped['entries']
+    grouped['price_per_squared_meter_centre'] = grouped['weighted_price_per_squared_meter_centre'] / grouped['entries']
+    grouped['price_per_squared_meter_outside_centre'] = grouped['weighted_price_per_squared_meter_outside_centre'] / grouped['entries']
 
     grouped['avg_savings_rate_centre'] = 1 - (grouped['total_cost_centre'] / grouped['avg_net_salary'])
     grouped['avg_savings_rate_outside_centre'] = 1 - (grouped['total_cost_outside_centre'] / grouped['avg_net_salary'])
+    grouped['avg_squared_meters_saved_centre'] = grouped['avg_savings_centre'] / grouped['price_per_squared_meter_centre']
+    grouped['avg_squared_meters_saved_outside_centre'] = grouped['avg_savings_outside_centre'] / grouped['price_per_squared_meter_outside_centre']
 
     grouped = grouped.drop(['weighted_avg_net_salary', 'weighted_total_cost_centre', 'weighted_total_cost_outside_centre'], axis=1)
 
@@ -82,6 +92,8 @@ def subplot_data(data: pd.DataFrame, ax, plot_title: str, x_metric_name: str, xl
     ax.legend(title='Countries')  # Display legend
     ax.grid(True)  # Display grid
 
+# It plots a metric vs the average salary. It automatically creates two subplots and automatically plots
+# {metric_name}_centre and {metric_name}_outside_centre on the two subplots.
 def plot_data(data: pd.DataFrame, plot_title: str, metric_name: str, metric_label: str, annotation_column: str = None) -> None:
     fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(16, 6))
 
@@ -93,9 +105,10 @@ def plot_data(data: pd.DataFrame, plot_title: str, metric_name: str, metric_labe
 
     fig.suptitle(plot_title)  # Set the title of the plot
 
-plot_data(df, 'Savings Rate vs Avg Salary (Cities)', 'avg_savings_rate', 'Savings Rate')
 plot_data(country_grouped, 'Savings Rate vs Avg Salary (Countries)', 'avg_savings_rate', 'Savings Rate')
-plot_data(df, 'Home Price vs Avg Salary (Cities)', 'avg_squared_meters_earned', 'Avg m2 earned (per month)')
-plot_data(df, 'Home Price vs Avg Savings (Cities)', 'avg_squared_meters_saved', 'Avg m2 saved (per month)')
+plot_data(df, 'Savings Rate vs Avg Salary (Cities)', 'avg_savings_rate', 'Savings Rate')
+# plot_data(df, 'Home Price vs Avg Salary (Cities)', 'avg_squared_meters_earned', 'Avg m2 earned (per month)')
+plot_data(df, 'Home Price vs Avg Savings (Cities)', 'avg_squared_meters_saved', 'Avg m2 saved (per month)', annotation_column='city')
+plot_data(country_grouped, 'Home Price vs Avg Savings (Cities)', 'avg_squared_meters_saved', 'Avg m2 saved (per month)')
 
 plt.show()
