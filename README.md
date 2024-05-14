@@ -16,10 +16,10 @@ pip install -r requirements.txt
 This projects has been designed to be open for modification.
 
 Currently there are two scripts:
-- `main.py` used for gathering data. It writes (overwrites if already present) `cities.csv`.
+- `collect.py` used for gathering data. It writes (overwrites if already present) `cities.csv`.
 - `analysis.py` used for plotting and analysis. It reads `cities.csv` in the same repo directory.
 
-A small dataset of ~100 cities is already provided under `cities.csv`. Feel free to add more countries and cities to collect in `main.py`.
+A small dataset of ~100 cities is already provided under `cities.csv`. Feel free to add more countries and cities to collect in `collect.py`.
 
 ## Analysis
 
