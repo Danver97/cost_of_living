@@ -91,3 +91,7 @@ For other countries, the result is not really clear and varies hugely by city. C
 ### Conclusions
 
 I hope this could provide better insights all together of which of the european cities are the most affordable, possibly helping deciding where to live in Europe.
+
+## Contributing
+
+Feel free to open issues, PRs and suggest any further improvement.
