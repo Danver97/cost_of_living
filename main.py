@@ -6,7 +6,6 @@ from urllib.request import urlopen
 url = "https://www.numbeo.com/cost-of-living/in/Copenhagen?displayCurrency=EUR"
 page = urlopen(url)
 html = page.read().decode("utf-8")
-# print(html)
 soup = BeautifulSoup(html, "html.parser")
 
 
@@ -108,9 +107,6 @@ def extract_city_record(soup: BeautifulSoup, country: str, name: str) -> City:
                 extract_price_per_squared_meter_outside_centre(soup),
                 extract_avg_net_salary(soup),
                 extract_number_of_entries(soup))
-
-# print(is_city_found(soup))
-# print(extract_city_record(soup, 'DK', 'Copenhagen').to_csv())
 
 countries_and_cities = {
     'DK': ['Copenhagen', 'Aarhus-Denmark', 'Odense', 'Aalborg', 'Esbjerg'],
